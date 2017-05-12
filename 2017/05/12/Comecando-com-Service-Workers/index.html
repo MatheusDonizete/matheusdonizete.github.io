@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Começando com Service Workers | MatheusDonizete</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Service Workers, aquela tecnologia maneira utilizada para resolver gargalos de perfomance existentes em aplicações Web (como perda de conexão, latência de rede etc.), que prejudicam a experência do us">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Começando com Service Workers">
+<meta property="og:url" content="http://matheusdonizete.github.io/2017/05/12/Comecando-com-Service-Workers/index.html">
+<meta property="og:site_name" content="MatheusDonizete">
+<meta property="og:description" content="Service Workers, aquela tecnologia maneira utilizada para resolver gargalos de perfomance existentes em aplicações Web (como perda de conexão, latência de rede etc.), que prejudicam a experência do us">
+<meta property="og:image" content="https://philna.sh/images/service-worker.png">
+<meta property="og:image" content="https://mdn.mozillademos.org/files/12636/sw-lifecycle.png">
+<meta property="og:image" content="https://mdn.mozillademos.org/files/12632/sw-events.png">
+<meta property="og:image" content="https://mdn.mozillademos.org/files/12634/sw-fetch.png">
+<meta property="og:updated_time" content="2017-05-12T20:07:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Começando com Service Workers">
+<meta name="twitter:description" content="Service Workers, aquela tecnologia maneira utilizada para resolver gargalos de perfomance existentes em aplicações Web (como perda de conexão, latência de rede etc.), que prejudicam a experência do us">
+<meta name="twitter:image" content="https://philna.sh/images/service-worker.png">
+  
+    <link rel="alternative" href="/atom.xml" title="MatheusDonizete" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+<body>
+  <div id="container">
+    <div class="mobile-nav-panel">
+	<i class="icon-reorder icon-large"></i>
+</div>
+<header id="header">
+	<h1 class="blog-title">
+		<a href="/">MatheusDonizete</a>
+	</h1>
+	<nav class="nav">
+		<ul>
+			<li><a href="/">Home</a></li><li><a href="/archives">Archives</a></li>
+			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
+			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
+		</ul>
+	</nav>
+	<div id="search-form-wrap">
+		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://matheusdonizete.github.io"></form>
+	</div>
+</header>
+    <div id="main">
+      <article id="post-Comecando-com-Service-Workers" class="post">
+	<footer class="entry-meta-header">
+		<span class="meta-elements date">
+			<a href="/2017/05/12/Comecando-com-Service-Workers/" class="article-date">
+  <time datetime="2017-05-12T19:01:45.000Z" itemprop="datePublished">12-05-2017</time>
+</a>
+		</span>
+		<span class="meta-elements author">MatheusDonizete</span>
+		<div class="commentscount">
+			
+		</div>
+	</footer>
+	
+	<header class="entry-header">
+		
+  
+    <h1 class="article-title entry-title" itemprop="name">
+      Começando com Service Workers
+    </h1>
+  
+
+	</header>
+	<div class="entry-content">
+		
+    	<p><img src="https://philna.sh/images/service-worker.png" alt="Worker Header"><br>Service Workers, aquela tecnologia maneira utilizada para resolver gargalos de perfomance existentes em aplicações Web (como perda de conexão, latência de rede etc.), que prejudicam a experência do usuário dentro de uma aplicação. </p>
+<p>O uso de Service Workers nos traz um recurso sensacional, o funcionamento Offline (antes a solução era usar AppCache, mas né, não deu muito certo).</p>
+<a id="more"></a>
+<h2 id="A-parte-Teorica"><a href="#A-parte-Teorica" class="headerlink" title="A parte Teórica"></a>A parte Teórica</h2><p>Aquele negócio, os Service Workers surgiram na intenção de resolver o problema do funcionamento Offline, apesar de apresentar uma sintaxe complexa (em comparação com o seu antecessor AppCache), ele te dá a total liberdade de manipulação do que está acontecendo, do que será salvo, quando será salvo e quando será removido, basicamente o princípio para se rodar uma PWA (Progressive Web App).</p>
+<p>Vale destacar que os Service Workers funcionam no escopo do Browser, uma camada acima do que estamos costumados a lidar quando trabalhamos com JavaScript (ou seja, os Service Workers NÃO tem acesso ao DOM), outro ponto importante é que os SWs só funcionam embaixo do protocolo HTTPS, visto que faz sentido, tendo em vista riscos de segurança que possa trazer.</p>
+<p>Antes de Rodar, um service worker passa por um processo de instalação e validação, seguindo o seguinte Ciclo de Vida:<br><img src="https://mdn.mozillademos.org/files/12636/sw-lifecycle.png" alt="Worker Lifecycle"></p>
+<p>No qual, o SW deve ser registrado, se instalado corretamente, começa a funcionar.</p>
+<p>Existem eventos que podem ser escutados na utilização de um SW:<br><img src="https://mdn.mozillademos.org/files/12632/sw-events.png" alt="Worker Events"></p>
+<p>Um fator importante a se levantar, é que toda a API é baseada em Promises, ou seja, ela é totalmente assíncrona.</p>
+<h2 id="Bora-Escrever-o-Primeiro"><a href="#Bora-Escrever-o-Primeiro" class="headerlink" title="Bora Escrever o Primeiro?"></a>Bora Escrever o Primeiro?</h2><p>O Exemplo a ser apresentado segue duas vertentes:</p>
+<ol>
+<li>Instalação da parada com um Cache</li>
+<li>Atualização de Cache Exclusivo</li>
+</ol>
+<h3 id="Instalando-um-Service-Worker"><a href="#Instalando-um-Service-Worker" class="headerlink" title="Instalando um Service Worker"></a>Instalando um Service Worker</h3><p>O exemplo consiste em realização do cache de arquivos para funcionamento offline e/ou melhoria de desempenho em algumas requisições.<br>Bora parar de enrolar, existe a seguinte receita de bolo, a instalação simples de um SW:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="string">'serviceWorker'</span> <span class="keyword">in</span> navigator) &#123;</div><div class="line">    navigator.serviceWorker.register(<span class="string">'./sw.js'</span>, &#123; <span class="attr">scope</span>: <span class="string">'./'</span> &#125;)</div><div class="line">        .then(<span class="function"><span class="keyword">function</span>(<span class="params">reg</span>)</span>&#123;</div><div class="line">            <span class="keyword">if</span> (reg.installing) &#123;</div><div class="line">                <span class="built_in">console</span>.log(<span class="string">'Service worker installing'</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reg.waiting) &#123;</div><div class="line">                <span class="built_in">console</span>.log(<span class="string">'Service worker installed'</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reg.active) &#123;</div><div class="line">                <span class="built_in">console</span>.log(<span class="string">'Service worker active'</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;).catch(<span class="function">(<span class="params">error</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Registration failed with '</span> + error));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>Explicando um pouco:</strong> Neste trecho de códico é registrado <em>sw.js</em>, ao qual tem um escopo definido, no caso do exemplo a rota raiz do app (definição opcional). Fator importante pois um Service Worker só irá enxergar os arquivos que estão em diretórios no mesmo nível ou abaixo do diretório em que se encontra.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> cacheVersion = <span class="number">1</span>;</div><div class="line"><span class="keyword">const</span> currentCaches = &#123;</div><div class="line">    <span class="attr">font</span>: <span class="string">`font-cache-v<span class="subst">$&#123;cacheVersion&#125;</span>`</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">//Starter example, caching some files</span></div><div class="line"><span class="keyword">const</span> cacheUrls = [</div><div class="line">    <span class="string">'/'</span>,</div><div class="line">    <span class="string">'/js/app.js'</span>,</div><div class="line">    <span class="string">'/fonts/roboto/Roboto-Regular.woff2'</span></div><div class="line">];</div></pre></td></tr></table></figure>
+<p>Definimos algumas maneiras de controlar nosso Cache, agora vamos gerenciar o evento de instalação, ao qual adiciona ao cache todas as URL’s definidas.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.addEventListener(<span class="string">'install'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    event.waitUntil(</div><div class="line">        caches.open(<span class="string">`v<span class="subst">$&#123;cacheVersion&#125;</span>`</span>)</div><div class="line">        .then(<span class="function"><span class="keyword">function</span>(<span class="params">cache</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> cache.addAll(cacheUrls);</div><div class="line">        &#125;)</div><div class="line">    );</div><div class="line">&#125;);</div><div class="line"></div><div class="line">self.addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">     event.respondWith(</div><div class="line">        caches.match(event.request).then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> response || fetch(event.request);</div><div class="line">        &#125;);</div><div class="line">     );</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>No trecho de código acima, nós também interceptamos as requisições, gerenciando o evento de <strong>fetch</strong>, este funciona da seguinte forma: a requisição chega, caso o arquivo exista no cache, ele responde o que estava no cache, senão ele passa a requisição para frente. Como uma imagem sempre ajuda, tá aí:<br><img src="https://mdn.mozillademos.org/files/12634/sw-fetch.png" alt="fetch event"></p>
+<h3 id="Alterando-um-pouco-o-Exemplo"><a href="#Alterando-um-pouco-o-Exemplo" class="headerlink" title="Alterando um pouco o Exemplo"></a>Alterando um pouco o Exemplo</h3><p>Vamos agora alterar o que já foi feito, nesta segunda parte iremos criar um Cache exclusivo para fontes, vamos ignorar o que foi feito acima (só a última parte). Além do evento de <strong>fetch</strong> também vamos cuidar do evento <strong>activate</strong>, porém de um jeito simples, vamos excluir dentro do evento o cache que for velho e estiver fora da nossa lista de caches válidos.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">self.addEventListener(<span class="string">'activate'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> expectedCacheNames = <span class="built_in">Object</span>.keys(currentCaches)</div><div class="line">        .map(<span class="function"><span class="params">key</span> =&gt;</span> currentCaches[key]);</div><div class="line">    event.waitUntil(</div><div class="line">        caches.keys().then(<span class="function"><span class="params">cacheNames</span> =&gt;</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="built_in">Promise</span>.all(</div><div class="line">                cacheNames.map(<span class="function"><span class="params">cacheName</span> =&gt;</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (expectedCacheNames.indexOf(cacheName) == <span class="number">-1</span>) &#123;</div><div class="line">                        <span class="keyword">return</span> caches.delete(cacheName); <span class="comment">//exclusão de cache velho</span></div><div class="line">                    &#125;</div><div class="line">                &#125;)</div><div class="line">            );</div><div class="line">        &#125;)</div><div class="line">    );</div><div class="line">&#125;);</div><div class="line"></div><div class="line">self.addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Handling fetch event for'</span>, event.request.url);</div><div class="line">    event.respondWith(</div><div class="line">        caches.open(currentCaches.font).then(<span class="function"><span class="keyword">function</span>(<span class="params">cache</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> cache.match(event.request).then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</div><div class="line">                <span class="built_in">console</span>.log(response);</div><div class="line">                <span class="keyword">if</span> (response) &#123;</div><div class="line">                    <span class="built_in">console</span>.log(<span class="string">'Found response in cache:'</span>, response);</div><div class="line">                    <span class="keyword">return</span> response;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">return</span> fetch(event.request.clone()).then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</div><div class="line">                    <span class="keyword">if</span> (response.status &lt; <span class="number">400</span> &amp;&amp;</div><div class="line">                        response.headers.has(<span class="string">'content-type'</span>) &amp;&amp;</div><div class="line">                        response.headers.get(<span class="string">'content-type'</span>).match(<span class="string">'font'</span>)) &#123;</div><div class="line">                        <span class="built_in">console</span>.log(<span class="string">'Caching the response to'</span>, event.request.url);</div><div class="line">                        cache.put(event.request, response.clone());</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="built_in">console</span>.log(<span class="string">'Not caching the response to'</span>, event.request.url);</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">return</span> response;</div><div class="line">                &#125;);</div><div class="line">            &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</div><div class="line">                <span class="built_in">console</span>.error(<span class="string">'Error in fetch handler:'</span>, error);</div><div class="line">                <span class="keyword">throw</span> error;</div><div class="line">            &#125;);</div><div class="line">        &#125;)</div><div class="line">    );</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>No evento de fetch, acontece algo similar exemplo anterior, porém se a fonte não for encontrada no Cache, ela será salva e a requisição continuará.</p>
+<h2 id="Conclusoes"><a href="#Conclusoes" class="headerlink" title="Conclusões"></a>Conclusões</h2><p>Service Worker é um negócio que deve ser estudado com calma, assim como a validade de sua implementação em um projeto, como quase tudo na computação, <strong>depende do contexto</strong>. Entretanto temos um ganho no desempenho na segunda vez que o usuário acessar de nossa aplicação. </p>
+<p>Como nem tudo são flores, nem todos browser tem suporte a Service Workers, uma boa leitura é <a href="https://jakearchibald.github.io/isserviceworkerready/" target="_blank" rel="external">is SERVICE WORKER READY?</a>.</p>
+<h2 id="Referencias"><a href="#Referencias" class="headerlink" title="Referências"></a>Referências</h2><ul>
+<li><a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Service_Worker_API/Using_Service_Workers" target="_blank" rel="external">MDN - Usando Service Workers</a></li>
+<li><a href="https://braziljs.org/blog/service-worker-a-revolucao-da-plataforma-web/" target="_blank" rel="external">BrazilJS - ServiceWorker: A revolução da plataforma Web</a></li>
+</ul>
+
+    
+	</div>
+	<footer class="entry-footer">
+		<div class="entry-meta-footer">
+			<span class="category">
+				
+			</span>
+			<span class="tags">
+				
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/service-workers-javascript-frontend-Progressive-Web-Apps-PWA-SW/">service workers, javascript, frontend, Progressive Web Apps, PWA, SW</a></li></ul>
+
+			</span>
+		</div>
+	</footer>
+	
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/04/09/Qual-for-e-mais-rapido/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          Qual for é mais rápido?
+        
+      </div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+    </div>
+    <div class="mb-search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:matheusdonizete.github.io">
+  </form>
+</div>
+<footer id="footer">
+	<h1 class="footer-blog-title">
+		<a href="/">MatheusDonizete</a>
+	</h1>
+	<span class="copyright">
+		&copy; 2017 MatheusDonizete<br>
+		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
+		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	</span>
+</footer>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+  </div>
+</body>
+</html>
